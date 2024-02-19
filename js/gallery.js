@@ -100,7 +100,31 @@ function largeImgLink(event) {
     }
 
     const largeImage = event.target.dataset.source;
-    event.target.setAttribute("src", largeImage);
-    const instance = basicLightbox.create(event.target.outerHTML);
+    const instance = basicLightbox.create(
+        `<img
+          class="gallery-image"
+          src="${largeImage}"
+          data-source="${largeImage}"
+          alt="${event.target.alt}"
+        />`,
+        {
+            onShow: instance => {
+                document.addEventListener('keydown', event => {
+                    const key = event.key;
+                    if (key == "Escape") {
+                        instance.close();
+                    }
+                });
+            },
+            onClose: instance => {
+                document.removeEventListener('keydown', event => {
+                    const key = event.key;
+                    if (key == "Escape") {
+                        instance.close();
+                    }
+                });
+            },
+        },
+    );
     instance.show();
 }
